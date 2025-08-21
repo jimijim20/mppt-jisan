@@ -67,7 +67,7 @@ export default function DevicePage() {
         <WifiBadge
           online={isOnline}
           rssi={typeof live?.wifi?.rssi === 'number' ? live.wifi.rssi : undefined}
-          lastSeenTs={lastTs}
+          lastTsMs={lastTs}
           staleMs={15000}
         />
 
