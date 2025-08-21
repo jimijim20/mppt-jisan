@@ -1,27 +1,36 @@
 <?php
 require 'config.php';
 
+// Cek kolom waktu yang tersedia di tabel monitors
 function col_exists($pdo, $col){
-  try{ $pdo->query("SELECT `$col` FROM monitors LIMIT 1"); return true; }catch(Throwable $e){ return false; }
+  try { $pdo->query("SELECT `$col` FROM monitors LIMIT 1"); return true; }
+  catch (Throwable $e) { return false; }
 }
 
-$col = null;
-foreach(['created_at','updated_at','ts','time','timestamp','datetime'] as $c){
-  if(col_exists($pdo, $c)){ $col = $c; break; }
+$timeCol = null;
+foreach (['created_at','updated_at','ts','time','timestamp','datetime'] as $c) {
+  if (col_exists($pdo, $c)) { $timeCol = $c; break; }
 }
 
-if ($col){
-  $sql = "SELECT UNIX_TIMESTAMP($col)*1000 AS ts_ms,
-    solarVoltage, solarCurrent, batteryVoltage, batteryCurrent,
-    power, todayYield, lifetimeYield, batteryState, wifistatus
-  FROM monitors ORDER BY $col DESC LIMIT 1";
+if ($timeCol) {
+  // Kembalikan ts_ms = UNIX_TIMESTAMP(...) * 1000 (NUMBER), agar frontend bisa hitung umur data
+  $sql = "SELECT UNIX_TIMESTAMP(`$timeCol`)*1000 AS ts_ms,
+                 solarVoltage, solarCurrent, batteryVoltage, batteryCurrent,
+                 power, todayYield, lifetimeYield, batteryState, wifistatus
+          FROM monitors
+          ORDER BY `$timeCol` DESC
+          LIMIT 1";
+  $row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
 } else {
-  // Tidak ada kolom waktu; kirim ts_ms=null agar UI menganggap stale
+  // Tidak ada kolom waktu → tandai sebagai stale: ts_ms=NULL
   $sql = "SELECT NULL AS ts_ms,
-    solarVoltage, solarCurrent, batteryVoltage, batteryCurrent,
-    power, todayYield, lifetimeYield, batteryState, wifistatus
-  FROM monitors ORDER BY id DESC LIMIT 1";
+                 solarVoltage, solarCurrent, batteryVoltage, batteryCurrent,
+                 power, todayYield, lifetimeYield, batteryState, wifistatus
+          FROM monitors
+          ORDER BY id DESC
+          LIMIT 1";
+  $row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
 }
 
-$row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
-echo json_encode($row ? $row : new stdClass());
+header('Content-Type: application/json');
+echo json_encode($row ?: new stdClass());
