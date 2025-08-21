@@ -1,0 +1,8 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+:root{color-scheme:dark}body{@apply bg-navy-900 text-gray-100}
+.glass{@apply bg-navy-800/60 border border-white/10 backdrop-blur-sm rounded-2xl shadow-soft}
+.btn{@apply inline-flex items-center justify-center rounded-xl px-3 py-2 font-medium transition}
+.btn-primary{@apply bg-accent-500/20 text-accent-400 hover:bg-accent-500/30 border border-accent-400/30}
+.btn-outline{@apply border border-white/15 hover:border-white/30}
+.input{@apply w-full bg-navy-900/60 border border-white/10 rounded-xl px-3 py-2 outline-none focus:ring-2 ring-accent-500/40}
+.label{@apply text-sm text-gray-300 mb-1}
