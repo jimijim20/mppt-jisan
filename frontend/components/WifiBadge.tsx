@@ -14,6 +14,8 @@ type WifiBadgeProps = {
   showRssi?: boolean;
   /** Kelas tambahan (opsional) */
   className?: string;
+  staleMs?: number;
+
 };
 
 export default function WifiBadge({

@@ -1,3 +1,6 @@
-<?php require 'config.php'; require_login();
+<?php
+require_once __DIR__ . "/../config.php";
+
+require_login();
 $id=(int)($_GET['id']??1); $stmt=$pdo->prepare("SELECT id,batteryVoltageSetting,batteryType,maxChargeCurrent,absorptionVoltage,absorptionTime,floatVoltage,reBulkVoltageOffset FROM setparams WHERE id=? LIMIT 1");
 $stmt->execute([$id]); $row=$stmt->fetch(PDO::FETCH_ASSOC); echo json_encode(['row'=>$row]);

@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require_once __DIR__ . "/../config.php";
 
 // Cek kolom waktu yang tersedia di tabel monitors
 function col_exists($pdo, $col){

@@ -5,7 +5,7 @@ export type Pt = { ts: number; value: number };
 
 export default function LiveChart({
   title, data, yUnit,
-}: { title: string; data: Pt[]; yUnit?: string }) {
+}: { title: string; data: Pt[]; yUnit?: string; livePoint?: Pt; }) {
   return (
     <div className="rounded-xl p-4 bg-[#0f2a44] border border-gray-700">
       <div className="mb-2 text-sm text-gray-300">{title}</div>
